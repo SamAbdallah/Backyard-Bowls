@@ -1,0 +1,32 @@
+#container{
+    display: flex;
+    flex-direction: row;
+
+}
+
+#image{
+    height: 100px;
+    width: 100px;
+    margin-right: 20%;
+}
+
+#container p{
+    color:rgb(122, 49, 49);
+    font-size: large;
+    font-weight: bolder;
+}
+
+.input{
+    margin-top: 13px;
+    
+}
+.input input{
+    border-radius: 10px;
+    border: 2px solid antiquewhite;
+    height: 20px;
+}
+#icon{
+     
+  margin-top: 8px;
+  color: #999; 
+}
