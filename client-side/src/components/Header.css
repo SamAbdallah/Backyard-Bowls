@@ -1,17 +1,25 @@
 #container{
     display: flex;
     flex-direction: row;
+    margin-top: 4%;
 
 }
 
 #image{
     height: 100px;
     width: 100px;
+    margin-right: 30%;
+    margin-left: 5%;
+    margin-top: -10px;
+}
+
+#booking{
     margin-right: 20%;
+    margin-left: 1%;
 }
 
 #container p{
-    color:rgb(122, 49, 49);
+    color: darkslategray;
     font-size: large;
     font-weight: bolder;
 }
@@ -22,11 +30,19 @@
 }
 .input input{
     border-radius: 10px;
-    border: 2px solid antiquewhite;
+    border: 1px solid white;
     height: 20px;
 }
+.input input:focus{
+    border: 1px solid white;
+    outline: none;
+
+
+}
+
+
 #icon{
-     
-  margin-top: 8px;
+  margin-top: -5px;
   color: #999; 
 }
+
