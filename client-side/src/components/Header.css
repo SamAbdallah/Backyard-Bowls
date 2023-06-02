@@ -123,6 +123,17 @@
   .open .line:nth-child(3) {
     transform: translateY(-8px) rotate(-45deg);
   }
+
+
+.burger-icon{
+    transition: 1s;
+}
+
+.burger-icon:hover{
+transform: rotate(360deg);
+
+}
+
   
   .text {
     display: none;
