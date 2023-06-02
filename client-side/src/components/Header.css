@@ -10,6 +10,7 @@
     width: 100px;
     margin-right: 25%;
     margin-left: 5%;
+    transition: 1s;
   }
   
   #menu {
@@ -44,6 +45,7 @@
     width: 30px;
     margin-left: 10px;
     transition: width 0.3s;
+    transition: 1s;
   }
   
   #service {
@@ -58,6 +60,7 @@
     #image {
       height: 80px;
       width: 80px;
+      margin-right: 10%;
     }
   
     #menu,
@@ -134,3 +137,21 @@
     margin-bottom: 5px;
   }
   
+  #image:hover{
+    transform: rotate(360deg);
+  }
+
+
+
+
+  #service:hover{
+    text-decoration: underline;
+  }
+
+  #home:hover{
+    text-decoration: underline;
+  }
+
+  #menu:hover{
+    text-decoration: underline;
+  }
