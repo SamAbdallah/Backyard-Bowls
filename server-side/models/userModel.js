@@ -1,5 +1,7 @@
 const mongoose=require('mongoose')
 const Schema=mongoose.Schema
+const bcyrpt=require("bcrypt")
+
 
 const userSchema= new mongoose.Schema(
     {
@@ -46,4 +48,22 @@ const userSchema= new mongoose.Schema(
 
     },
     {timestamps:true}
-)
+
+
+  )
+
+  userSchema.pre("save",async function(next){
+    try{
+      if(!this.isModified("password")){
+        return next()
+      }
+      this.password=await bcyrpt.hash(this.password,12)
+      this.passwordConfirm=undefined
+    }
+
+    catch(err){
+      console.log(err)
+    }
+  })
+
+module.exports=mongoose.model("User",userSchema)
