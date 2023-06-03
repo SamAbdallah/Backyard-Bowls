@@ -37,3 +37,14 @@ exports.signUp=async(req,res)=>{
         console.log(err)
     }
 }
+
+exports.login=async(req,res)=>{
+    const email=req.body.email 
+    const password=req.body.password 
+    let user=User.findOne({email:email})
+    if(!user){
+        return res.status(400).json({message:"user not found"})
+    }
+
+    
+}
