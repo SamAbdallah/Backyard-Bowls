@@ -28,7 +28,7 @@ const userSchema= new mongoose.Schema(
       },
 
       type:{
-        type:string,
+        type:String,
         required:true
       },
       isVerified:{
