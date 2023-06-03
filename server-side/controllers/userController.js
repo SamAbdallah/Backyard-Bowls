@@ -45,6 +45,11 @@ exports.login=async(req,res)=>{
     if(!user){
         return res.status(400).json({message:"user not found"})
     }
+    if(!await user.checkPassword(req.body.password,user.password)){
+        return res.status(401).json({message:"passwords problem"})
+    }
 
-    
+    return res.status(201).json({message:"user logged in"})
+
+
 }
