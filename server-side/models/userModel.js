@@ -68,6 +68,7 @@ const userSchema= new mongoose.Schema(
 
   userSchema.methods.checkPassword=async function(candidatePassword,UserPassword){
     return bcyrpt.compare(candidatePassword,UserPassword)
-  }
+
+}
 
 module.exports=mongoose.model("User",userSchema)

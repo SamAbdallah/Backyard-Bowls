@@ -41,11 +41,11 @@ exports.signUp=async(req,res)=>{
 exports.login=async(req,res)=>{
     const email=req.body.email 
     const password=req.body.password 
-    let user=User.findOne({email:email})
+    let user= await User.findOne({email:email})
     if(!user){
         return res.status(400).json({message:"user not found"})
     }
-    if(!await user.checkPassword(req.body.password,user.password)){
+    if(!await user.checkPassword(password,user.password)){
         return res.status(401).json({message:"passwords problem"})
     }
 
