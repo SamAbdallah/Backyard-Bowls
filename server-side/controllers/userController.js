@@ -113,3 +113,25 @@ exports.login=async(req,res)=>{
 
 
 }
+
+exports.validateUser=async(req,res)=>{
+    try{
+        const hashedToken=crypto.createHash("sha256").update(req.params.token).digest("hex")
+        const user=await User.findOne({validationToken:hashedToken,validationExpires:{$gt:Date.now()}})
+        if (!user){
+            return res.status(400).json({message:"token invalid or expired require a new one "})
+        }
+
+        user.isVerified=true
+        user.validationToken=undefined
+        user.validationExpires=undefined
+        user.validatedAt=Date.now()
+        await user.save()
+        return res.status(200).json({message:"micheal jorden activated"})
+
+
+    }
+    catch(err){
+        console.log(err)
+    }
+}
