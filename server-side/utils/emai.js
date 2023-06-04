@@ -1,10 +1,13 @@
 var Sib = require('sib-api-v3-sdk');
+const dotenv=require('dotenv')
+dotenv.config()
+
 
 exports.sendMail=async(details)=>{
     const client=Sib.ApiClient.instance
     
     const apiKey=client.authentications['api-key']
-    apiKey.apiKey=api2.env.API
+    apiKey.apiKey=process.env.API
     
     const tranEmailApi= new Sib.TransactionalEmailsApi
     
