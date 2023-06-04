@@ -3,6 +3,7 @@ const validator=require("validator")
 const jwt=require('jsonwebtoken')
 const dotenv=require('dotenv')
 const sendMail=require("../utils/emai").sendMail
+const crypto=require("crypto")
 dotenv.config()
 
 
