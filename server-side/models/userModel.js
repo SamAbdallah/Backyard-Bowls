@@ -71,4 +71,13 @@ const userSchema= new mongoose.Schema(
 
 }
 
+
+userSchema.methods.generateValidity=function () {
+  const validityToken=crypto.randomBytes(32).toString("hex") //will be sent via email
+  this.validationToken=crypto.createHash("sha256").update(validityToken).digest("hex")
+  this.validationExpires=Date.now()+10*60*1000 //10 min of validity
+  return validityToken
+}
+
+
 module.exports=mongoose.model("User",userSchema)
