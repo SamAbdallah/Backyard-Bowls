@@ -46,8 +46,9 @@ exports.signUp=async(req,res)=>{
         type:req.body.type
                 
     })
+    createSendToken(newUser,201,res,"user Created successfully!")
 
-    return res.status(201).json({message:"user created successfully",data:newUser})
+
 }
 
     catch(err){
