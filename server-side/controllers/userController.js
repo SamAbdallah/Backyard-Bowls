@@ -1,6 +1,11 @@
 const User=require("../models/userModel")
 const validator=require("validator")
 
+
+const createSendToken=(user,statusCode,res,msg)=>{
+    const token=signToken
+}
+
 exports.signUp=async(req,res)=>{
     try{
         let email=req.body.email 
