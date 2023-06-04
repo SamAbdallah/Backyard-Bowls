@@ -1,9 +1,21 @@
 const User=require("../models/userModel")
 const validator=require("validator")
+const jwt=require('jsonwebtoken')
 
+const signToken=(id)=>{
+    return jwt.sign({id},api2.env.JWT_SECRET,{expiresIn:process.env.JWT_EXPIRES_IN})
+}
 
 const createSendToken=(user,statusCode,res,msg)=>{
-    const token=signToken
+    const token=signToken(user._id)
+    res.status(statusCode).json({
+        status:"success",
+        msg,
+        token,
+        data:{
+            user
+        }
+    })
 }
 
 exports.signUp=async(req,res)=>{
