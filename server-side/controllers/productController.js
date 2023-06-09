@@ -49,3 +49,25 @@ exports.deleteItem=async(req,res)=>{
         console.log(err)
     }
 }
+
+exports.addItem=async(req,res)=>{
+    try{
+    const user=req.body.userID
+    const checkUser=await User.findById(user)    
+    const product=req.body.id 
+    const checkProduct=await Product.findById(product)
+    if(!checkUser){
+        return res.status(401).json({message:"user not found"})
+    }    
+    else if(!checkProduct){
+        return res.status(401).json({message:"item not found"})
+    }
+    else{
+        user.cart.push({product:product})
+    }
+
+}
+catch(err){
+    console.log(err)
+}
+}
