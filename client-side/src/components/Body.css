@@ -1,3 +1,33 @@
-h1{
-    color: blue;
+.container{
+    display: flex;
+    flex-direction: row;
+    margin-left: 20%;
+}
+#orange{
+    color:orange;
+}
+#title{
+    text-align: left;
+    font-size: xxx-large;
+
+}
+
+#subtitle{
+    text-align: left;
+}
+#orderButton{
+    background-color: orange;
+    border-radius: 15px;
+    padding: 1px;
+}
+#orderButton h1{
+color: white;
+}
+.itemsTop{
+    display: flex;
+    flex-direction: column;
+}
+#itemRow{
+    display: flex;
+    flex-direction: row;
 }
