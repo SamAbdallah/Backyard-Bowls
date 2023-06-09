@@ -136,3 +136,77 @@ exports.validateUser=async(req,res)=>{
         console.log(err)
     }
 }
+
+exports.forgotPassword=async(req,res)=>{
+    try{        //check if user exists 
+
+
+        const user=await User.findOne({email:req.body.email})
+        if(!user){
+            return res.status(404).json({message:"user with this email does not exist"})
+        }
+        //create the reset token
+
+        const resetToken=user.generatePasswordResetToken()
+        await user.save({validateBeforeSave:false})
+
+        //send the token via email
+        //link/reset token
+        //create url
+        const url=`${req.protocol}://${req.get("host")}/resetPassword/${resetToken}`
+        const msg=`Forgot password?reset bs visiting this link ${url}`
+        try{
+            await sendMail({
+                receiver:user.email,
+                subject:"your token valid for 10 minutes",
+                content:msg,
+            })
+            res.status(200).json({status:"success",message:"reset link sent"})
+
+
+        }
+        catch(err){
+user.passwordResetToken=undefined
+user.passwordResetExpires=undefined
+await user.save({validateBeforeSave:false})
+res.status(500).json({message:"error occured while sending"})
+console.log(err)
+
+        }
+
+    }
+    catch(err){
+        console.log(err)
+
+    }
+}
+
+
+exports.resetPassword=async(req,res)=>{ 
+    try{
+        const hashedToken=crypto.createHash("sha256").update(req.params.token).digest("hex")
+        const user=await User.findOne({passwordResetToken:hashedToken})
+        if(!user){
+            return res.status(400).json({message:"token invalid or expired request a new one"})
+        }
+        if(req.body.password.length<8){
+            return res.status(400).json({message:"password length too short"})
+
+        }
+        if(req.body.password!==req.body.passwordConfirm){
+            return res.status(400).json({message:"password and pass confirm not the same"})
+
+        }
+        user.password=req.body.password
+        user.passwordConfirm=req.body.passwordConfirm
+        user.passwordResetToken=undefined
+        user.passwordResetExpires=undefined
+        user.passwordChangedAt=Date.now()
+        await user.save()
+        return res.status(200).json({message:"password changed successfully"})
+
+    }
+    catch(err){
+        console.log(err)
+    }
+}

@@ -50,11 +50,11 @@ const userSchema= new mongoose.Schema(
 
       passwordChangedAt:Date,
       passwordResetToken:String,
-      passwordResetTokenExpires:Date,
-
+      passwordResetExpires:Date,
+      
       validatedAt:Date,
       validationToken:String,
-      validationExpires:Date
+      validationExpires:Date,
 
     },
     {timestamps:true}
@@ -89,5 +89,11 @@ userSchema.methods.generateValidity=function () {
   return validityToken
 }
 
+userSchema.methods.generatePasswordResetToken=function () {
+  const resetToken=crypto.randomBytes(32).toString("hex") 
+  this.passwordResetToken=crypto.createHash("sha256").update(resetToken).digest("hex")
+  this.passwordResetExpires=Date.now()+10*60*1000 
+  return resetToken
+}
 
 module.exports=mongoose.model("User",userSchema)
