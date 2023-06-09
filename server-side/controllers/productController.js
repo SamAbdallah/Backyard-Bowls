@@ -73,3 +73,25 @@ exports.addItem = async (req, res) => {
     }
   };
   
+  exports.removeItem=async(req,res)=>{
+    try {
+        const userId = req.body.userID;
+        const user = await User.findById(userId);
+        if (!user) {
+          return res.status(401).json({ message: "User not found" });
+        }
+    
+        const productId = req.body.id;
+        const product = await Product.findById(productId);
+        if (!product) {
+          return res.status(401).json({ message: "Item not found" });
+        }
+    
+        user.cart.pull({ product: productId });
+        await user.save();
+    
+        return res.status(200).json({ message: "Item removed from cart successfully" });
+      } catch (err) {
+        console.log(err);
+      }
+  }
