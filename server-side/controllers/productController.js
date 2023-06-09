@@ -67,8 +67,11 @@ exports.addItem = async (req, res) => {
       const existingItem = user.cart.find((item) => item.product.toString() === productId);
       if (existingItem) {
         existingItem.count += 1;
+        user.totalBalance=user.totalBalance+product.productPrice
       } else {
         user.cart.push({ product: productId, count: 1 });
+        user.totalBalance=user.totalBalance+product.productPrice
+
       }
   
       await user.save();
@@ -95,11 +98,15 @@ exports.addItem = async (req, res) => {
       }
   
       if (user.cart[itemIndex].count === 1) {
+        const product=await Product.findById(productId)
         user.cart.splice(itemIndex, 1);
+        user.totalBalance=user.totalBalance-product.productPrice
         await user.save();
         return res.status(200).json({ message: "Item removed from cart successfully" });
       } else {
+        const product=await Product.findById(productId)
         user.cart[itemIndex].count -= 1;
+        user.totalBalance=user.totalBalance-product.productPrice
         await user.save();
         return res.status(200).json({ message: "Item count decremented successfully" });
       }

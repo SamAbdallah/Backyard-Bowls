@@ -43,6 +43,10 @@ const userSchema= new mongoose.Schema(
           count:Number
         },
       ],
+      totalBalance:{
+        type:Number,
+        default:0
+      },
 
       passwordChangedAt:Date,
       passwordResetToken:String,
