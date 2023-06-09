@@ -39,7 +39,8 @@ const userSchema= new mongoose.Schema(
       },
       cart:[
         {
-          product:{type:Schema.Types.ObjectId,ref:"Product"}
+          product:{type:Schema.Types.ObjectId,ref:"Product"},
+          count:Number
         },
       ],
 

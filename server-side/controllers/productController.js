@@ -64,7 +64,13 @@ exports.addItem = async (req, res) => {
         return res.status(401).json({ message: "Item not found" });
       }
   
-      user.cart.push({ product: productId });
+      const existingItem = user.cart.find((item) => item.product.toString() === productId);
+      if (existingItem) {
+        existingItem.count += 1;
+      } else {
+        user.cart.push({ product: productId, count: 1 });
+      }
+  
       await user.save();
   
       return res.status(200).json({ message: "Item added to cart successfully" });
@@ -73,25 +79,31 @@ exports.addItem = async (req, res) => {
     }
   };
   
-  exports.removeItem=async(req,res)=>{
+  exports.removeItem = async (req, res) => {
     try {
-        const userId = req.body.userID;
-        const user = await User.findById(userId);
-        if (!user) {
-          return res.status(401).json({ message: "User not found" });
-        }
-    
-        const productId = req.body.id;
-        const product = await Product.findById(productId);
-        if (!product) {
-          return res.status(401).json({ message: "Item not found" });
-        }
-    
-        user.cart.pull({ product: productId });
-        await user.save();
-    
-        return res.status(200).json({ message: "Item removed from cart successfully" });
-      } catch (err) {
-        console.log(err);
+      const userId = req.body.userID;
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(401).json({ message: "User not found" });
       }
-  }
+  
+      const productId = req.body.id;
+      const itemIndex = user.cart.findIndex((item) => item.product.toString() === productId);
+  
+      if (itemIndex === -1) {
+        return res.status(401).json({ message: "Item not found in cart" });
+      }
+  
+      if (user.cart[itemIndex].count === 1) {
+        user.cart.splice(itemIndex, 1);
+        await user.save();
+        return res.status(200).json({ message: "Item removed from cart successfully" });
+      } else {
+        user.cart[itemIndex].count -= 1;
+        await user.save();
+        return res.status(200).json({ message: "Item count decremented successfully" });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
