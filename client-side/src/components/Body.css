@@ -11,6 +11,9 @@
     font-size: xxx-large;
 
 }
+#firstPart{
+    margin-right: 10%;
+}
 
 #subtitle{
     text-align: left;
@@ -28,6 +31,37 @@ color: white;
     flex-direction: column;
 }
 #itemRow{
+    display: flex; 
+    flex-direction: row;
+}
+#item img{
+    width: 100px;
+    height: 100px;
+}
+#item{
+    background-color:white;
+    text-align: center;
+    border: 2px solid orange;
+    border-radius: 20px;
+    padding: 15px;
+
+
+}
+#buttonsContainer{
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+}
+
+.addRemove{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: x-large;
+    background-color: orange;
+    border-radius: 15px;
+    padding: 6px;
+    height: 20px;
+    width: 20px;
+    color: white;
 }
