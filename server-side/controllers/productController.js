@@ -1,28 +1,51 @@
 const User=require("../models/userModel")
 const Product=require("../models/productModel")
+const multer = require('multer');
 
 
-exports.createItem=async(req,res)=>{
-    try{
-        const email=req.body.email 
-        const user=await User.findOne({email:email})
-        if (user.type!=="admin" || !user){
-            return res.status(401).json({message:"you are not allowed to add an item"})
-        }
-            const newItem=await Product.create({
-            productName:req.body.productName,
-            productPrice:req.body.productPrice,
-            category:req.body.category,
-            description:req.body.description
-        }) 
 
-        return res.status(201).json({message:"item added",data:newItem})
-    }        
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '_' + file.originalname);
+  },
+});
 
-    catch(err){
-        console.log(err)
+const upload = multer({ storage: storage });
+
+
+exports.createItem = async (req, res) => {
+  try {
+    const email = req.body.email;
+    const user = await User.findOne({ email: email });
+    if (user.type !== 'admin' || !user) {
+      return res.status(401).json({ message: 'You are not allowed to add an item' });
     }
-}
+
+    // Upload image using multer
+    upload.single('image')(req, res, async (err) => {
+      if (err) {
+        console.error('Error uploading image:', err);
+        return res.status(500).json({ message: 'Failed to upload image' });
+      }
+
+      const newItem = await Product.create({
+        productName: req.body.productName,
+        productPrice: req.body.productPrice,
+        category: req.body.category,
+        description: req.body.description,
+        imagePath: req.file ? req.file.path : '', // Save the image path to the product document
+      });
+
+      return res.status(201).json({ message: 'Item added', data: newItem });
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
 
 exports.deleteItem=async(req,res)=>{
     try{

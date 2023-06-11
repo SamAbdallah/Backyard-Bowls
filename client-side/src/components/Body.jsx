@@ -23,6 +23,7 @@ function Body() {
         </div>
 
       </div>
+      <input type="file"/>
     </div>
   )
 }

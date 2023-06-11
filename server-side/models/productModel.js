@@ -1,5 +1,9 @@
 const mongoose=require('mongoose')
 const Schema=mongoose.Schema
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+
+
 
 const productSchema= new mongoose.Schema(
     {
@@ -23,7 +27,9 @@ const productSchema= new mongoose.Schema(
         description:{
             type:String,
             required:[true,"please enter description"]
-        }
+        },
+        imagePath: String,
+
         
 
 
