@@ -1,51 +1,66 @@
-const User=require("../models/userModel")
-const Product=require("../models/productModel")
+const User = require('../models/userModel');
+const Product = require('../models/productModel');
 const multer = require('multer');
+const mongoose = require('mongoose');
 
-
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + '_' + file.originalname);
-  },
-});
-
-const upload = multer({ storage: storage });
-
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 exports.createItem = async (req, res) => {
   try {
     const email = req.body.email;
     const user = await User.findOne({ email: email });
-    if (user.type !== 'admin' || !user) {
-      return res.status(401).json({ message: 'You are not allowed to add an item' });
-    }
 
-    // Upload image using multer
+    // if (user.type !== 'admin' || !user) {
+    //   return res.status(401).json({ message: 'You are not allowed to add an item' });
+    // }
+
+    const conn = mongoose.connection;
+    const gfs = new mongoose.mongo.GridFSBucket(conn.db, {
+      bucketName: 'uploads', // Specify the bucket name
+    });
+
+    // Upload image using GridFS
     upload.single('image')(req, res, async (err) => {
       if (err) {
         console.error('Error uploading image:', err);
         return res.status(500).json({ message: 'Failed to upload image' });
       }
 
-      const newItem = await Product.create({
-        productName: req.body.productName,
-        productPrice: req.body.productPrice,
-        category: req.body.category,
-        description: req.body.description,
-        imagePath: req.file ? req.file.path : '', // Save the image path to the product document
+      const writeStream = gfs.openUploadStream(req.file ? req.file.originalname : '');
+
+      writeStream.on('error', (error) => {
+        console.error('Error writing image to GridFS:', error);
+        return res.status(500).json({ message: 'Failed to upload image' });
       });
 
-      return res.status(201).json({ message: 'Item added', data: newItem });
+      writeStream.on('finish', async (file) => {
+        const newItem = await Product.create({
+          productName: req.body.productName,
+          productPrice: req.body.productPrice,
+          category: req.body.category,
+          description: req.body.description,
+          image: {
+            filename: file.filename,
+            contentType: file.contentType,
+            fileId: file._id.toString(),
+          },
+        });
+
+        return res.status(201).json({ message: 'Item added', data: newItem });
+      });
+
+      // Pipe the uploaded file to GridFS write stream
+      writeStream.write(req.file.buffer);
+      writeStream.end();
     });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+
 
 exports.deleteItem=async(req,res)=>{
     try{
@@ -136,4 +151,4 @@ exports.addItem = async (req, res) => {
     } catch (err) {
       console.log(err);
     }
-  };
+  };  

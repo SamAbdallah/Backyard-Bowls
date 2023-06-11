@@ -28,7 +28,20 @@ const productSchema= new mongoose.Schema(
             type:String,
             required:[true,"please enter description"]
         },
-        imagePath: String,
+        image: {
+            filename: {
+              type: String,
+              default: '',
+            },
+            contentType: {
+              type: String,
+              default: '',
+            },
+            fileId: {
+              type: String,
+              default: '',
+            },
+          },
 
         
 
